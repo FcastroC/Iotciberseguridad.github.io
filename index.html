@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Guía Visual: Ciberseguridad en el Hogar</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <div class="text-center py-8">
+    <h1 class="text-4xl font-bold text-blue-700">
+      🏰 Guía Visual: Ciberseguridad en el Hogar
+    </h1>
+    <p class="text-lg text-gray-600 mt-2">
+      Aprende a proteger tus dispositivos conectados. ¡Haz clic en una zona del
+      castillo para empezar!
+    </p>
+  </div>
+
+  <!-- 🏰 Imagen del Castillo -->
+  <div class="castle-container relative w-full max-w-2xl mx-auto shadow-xl rounded-lg">
+    <img
+      src="https://images.unsplash.com/photo-1600697395541-189b7c7a3f95?auto=format&fit=crop&w=1200&q=80"
+      alt="Castillo medieval fortificado"
+      class="w-full h-auto rounded-lg block"
+    />
+
+    <!-- Zonas Interactivas -->
+    <div id="kids-room" class="room absolute flex items-center justify-center text-center"
+      style="top: 20%; left: 5%; width: 28%; height: 50%;">
+      <span class="room-label">Niños</span>
+    </div>
+
+    <div id="security-room" class="room absolute flex items-center justify-center text-center"
+      style="top: 20%; right: 5%; width: 28%; height: 50%;">
+      <span class="room-label">Cámaras</span>
+    </div>
+
+    <div id="living-room" class="room absolute flex items-center justify-center text-center"
+      style="top: 35%; left: 35%; width: 15%; height: 30%;">
+      <span class="room-label">Sala</span>
+    </div>
+
+    <div id="kitchen-room" class="room absolute flex items-center justify-center text-center"
+      style="top: 35%; right: 35%; width: 15%; height: 30%;">
+      <span class="room-label">Cocina</span>
+    </div>
+
+    <div id="wifi-room" class="room absolute flex items-center justify-center text-center"
+      style="bottom: 5%; left: 38%; width: 24%; height: 25%;">
+      <span class="room-label">Wi-Fi</span>
+    </div>
+  </div>
+
+  <footer class="mt-8 text-gray-500 text-center pb-4">
+    <p>Una guía visual creada para proteger a toda la familia en el mundo digital.</p>
+  </footer>
+
+  <!-- Modal -->
+  <div id="modal-template" class="modal">
+    <div class="modal-content">
+      <span class="close-btn">&times;</span>
+      <div class="flex items-center mb-4">
+        <div id="modal-icon" class="text-4xl mr-4"></div>
+        <h2 id="modal-title" class="text-3xl font-bold text-blue-600"></h2>
+      </div>
+      <div id="modal-tabs" class="flex flex-wrap border-b mb-4">
+        <button data-tab="adultos" class="tab-btn py-2 px-4 bg-gray-200 rounded-t-lg mr-1 active">Adultos</button>
+        <button data-tab="adolescentes" class="tab-btn py-2 px-4 bg-gray-200 rounded-t-lg mr-1">Adolescentes</button>
+        <button data-tab="ninos" class="tab-btn py-2 px-4 bg-gray-200 rounded-t-lg mr-1">Niños</button>
+        <button data-tab="mayores" class="tab-btn py-2 px-4 bg-gray-200 rounded-t-lg">Tercera Edad</button>
+      </div>
+      <div id="modal-body"></div>
+    </div>
+  </div>
+
+  <!-- 🔊 Sonidos -->
+  <audio id="sound-kids" src="sounds/kids.mp3" preload="auto"></audio>
+  <audio id="sound-cameras" src="sounds/cameras.mp3" preload="auto"></audio>
+  <audio id="sound-living" src="sounds/living.mp3" preload="auto"></audio>
+  <audio id="sound-kitchen" src="sounds/kitchen.mp3" preload="auto"></audio>
+  <audio id="sound-wifi" src="sounds/wifi.mp3" preload="auto"></audio>
+  <audio id="castle-close" src="sounds/castle-door.mp3" preload="auto"></audio>
+  <audio id="ambient-sound" src="sounds/ambient.mp3" preload="auto" loop></audio>
+
+  <!-- 🎚️ Botón Sonido Ambient ON/OFF -->
+  <button id="toggle-sound"
+    class="fixed bottom-4 left-4 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-full shadow-lg transition-all z-50">
+    Sonido: ON
+  </button>
+
+  <script src="script.js"></script>
+</body>
+</html>
