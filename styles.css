@@ -1,99 +1,83 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Estilos personalizados adicionales */
 body {
-  font-family: 'Segoe UI', sans-serif;
-  background: #fefbe9;
-  margin: 0;
-  padding: 0;
-  color: #333;
-  text-align: center;
+  font-family: 'Poppins', sans‑serif;
+  background-color: #f0f4f8;
 }
-header {
-  background-color: #7a5cfa;
-  color: white;
-  padding: 1rem;
+
+.castle-container {
+  position: relative;
+  max-width: 800px;
+  margin: auto;
 }
-header nav a {
-  color: white;
-  text-decoration: none;
-  margin: 0 0.5rem;
-}
-.hero {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 2rem;
-}
-.hero img {
-  max-width: 300px;
-  margin-right: 1rem;
-}
-.hero-text {
-  text-align: left;
-  max-width: 400px;
-}
-.button {
-  background-color: #7a5cfa;
-  color: white;
-  padding: 0.8rem 1.5rem;
-  text-decoration: none;
-  border-radius: 5px;
-  display: inline-block;
-  margin-top: 1rem;
-}
-.intro {
-  margin: 1rem 0;
-  font-size: 1.1rem;
-}
-.container {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  padding: 2rem;
-}
-.key {
-  background-color: #fff;
-  border: 2px solid #7a5cfa;
-  border-radius: 10px;
-  padding: 1rem;
-  margin: 1rem;
-  width: 200px;
+
+/* Zonas interactivas */
+.room {
+  position: absolute;
   cursor: pointer;
-  transition: transform 0.3s ease;
-  box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+  background-color: rgba(147,197,253,0.3);
+  border: 2px solid #3b82f6;
+  border-radius: 0.5rem;
+  transition: all 0.3s ease;
 }
-.key:hover {
-  transform: scale(1.05);
-  background-color: #f3edff;
+.room:hover,
+.room:focus {
+  background-color: rgba(59,130,246,0.6);
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(59,130,246,0.4);
 }
-.key-icon {
-  font-size: 2.5rem;
-  margin-bottom: 0.5rem;
+
+/* Modal */
+.modal {
+  @apply fixed inset-0 z-50 hidden bg-black bg-opacity-60 flex items-start justify-center overflow-auto;
+  animation: fadeIn 0.5s;
 }
-.description {
-  margin-top: 0.5rem;
-  display: none;
-  font-size: 0.9rem;
-  color: #555;
+.modal-content {
+  @apply bg-white rounded-xl shadow-xl mt-24 p-8 w-11/12 max-w-3xl relative;
+  animation: slideIn 0.5s;
 }
-.visible {
-  display: block;
+.close-btn {
+  @apply absolute top-4 right-6 text-3xl font-bold text-gray-400 cursor-pointer;
 }
-footer {
-  background-color: #f0f0f0;
-  padding: 1rem;
-  font-size: 0.9rem;
+.close-btn:hover,
+.close-btn:focus {
+  @apply text-gray-800;
 }
-@media (max-width: 600px) {
-  .container {
-    flex-direction: column;
-    align-items: center;
-  }
-  .hero {
-    flex-direction: column;
-  }
-  .hero img {
-    margin: 0 0 1rem 0;
-  }
-  .hero-text {
-    text-align: center;
-  }
+
+/* Tabs */
+.tab-btn {
+  @apply py-2 px-4 bg-gray-200 rounded-t-lg mr-2 focus:outline-none transition;
+}
+.tab-btn.active {
+  @apply bg-blue-600 text-white shadow-lg;
+}
+.tab-content {
+  @apply hidden;
+}
+.tab-content.active {
+  @apply block animate-fadeIn;
+}
+
+/* Tips */
+.tip {
+  @apply flex items-start mb-4 p-4 rounded-lg;
+}
+.tip-green { @apply bg-teal-50 border-l-4 border-teal-600; }
+.tip-yellow { @apply bg-yellow-50 border-l-4 border-yellow-600; }
+.tip-red { @apply bg-red-50 border-l-4 border-red-600; }
+.tip-icon {
+  @apply text-xl mr-4 flex-shrink-0;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes slideIn {
+  from { transform: translateY(-50px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
 }
