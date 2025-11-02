@@ -2,31 +2,61 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device‑width, initial‑scale=1">
-  <title>Tu Hogar Inteligente es tu Castillo</title>
-  <link rel="stylesheet" href="styles.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Guía Visual: Ciberseguridad en el Hogar</title>
+  <meta name="description" content="Guía interactiva para proteger tus dispositivos conectados en casa.">
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <!-- Estilos personalizados -->
+  <link rel="stylesheet" href="css/styles.css">
 </head>
-<body>
-  <header>
-    <h1>🔐 Tu Hogar Inteligente es tu Castillo</h1>
-    <nav>
-      <a href="index.html">Inicio</a> |
-      <a href="llaves.html">Las 5 Llaves del Castillo</a>
-    </nav>
-  </header>
-  <main>
-    <section class="hero">
-      <img src="castle‑smart‑home.jpg" alt="Castillo y hogar inteligente">
-      <div class="hero-text">
-        <h2>Bienvenido guardián de tu castillo digital</h2>
-        <p>Explora cómo proteger tus dispositivos inteligentes como si fueran puertas y ventanas de tu castillo.</p>
-        <a class="button" href="llaves.html">Comenzar la aventura</a>
+<body class="bg-gray-100">
+
+  <div class="container mx-auto p-4 text-center max-w-4xl">
+    <header class="my-8">
+      <h1 class="text-4xl md:text-5xl font-bold text-blue-600">Tu Castillo Inteligente</h1>
+      <p class="text-lg text-gray-600 mt-2">Aprende a proteger tus dispositivos conectados. ¡Haz clic en una zona del castillo para empezar!</p>
+    </header>
+
+    <div class="castle-container w-full max-w-2xl mx-auto shadow-xl rounded-lg">
+      <img src="http://googleusercontent.com/image_generation_content/0" 
+           alt="Ilustración de un castillo inteligente con zonas de seguridad" 
+           class="w-full h-auto rounded-lg block" loading="lazy">
+
+      <!-- Zonas interactivos como botones para accesibilidad -->
+      <button id="kids-room" class="room" aria-label="Cuarto de los niños" style="top:25%; left:8%; width:28%; height:30%;"></button>
+      <button id="security-room" class="room" aria-label="Cámaras de seguridad" style="top:30%; right:8%; width:28%; height:30%;"></button>
+      <button id="living-room" class="room" aria-label="Sala de estar" style="top:45%; left:28%; width:22%; height:22%;"></button>
+      <button id="kitchen-room" class="room" aria-label="Cocina inteligente" style="top:45%; right:28%; width:22%; height:22%;"></button>
+      <button id="wifi-room" class="room" aria-label="Red Wi-Fi" style="bottom:10%; left:38%; width:24%; height:28%;"></button>
+    </div>
+
+    <footer class="mt-8 text-gray-500">
+      <p>Una guía visual creada para proteger a toda la familia en el mundo digital.</p>
+    </footer>
+  </div>
+
+  <!-- Modal Template -->
+  <div id="modal" class="modal" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal-content">
+      <button class="close-btn" aria-label="Cerrar">&times;</button>
+      <div class="flex items-center mb-4">
+        <div id="modal-icon" class="text-4xl mr-4"></div>
+        <h2 id="modal-title" class="text-3xl font-bold text-blue-600"></h2>
       </div>
-    </section>
-  </main>
-  <footer>
-    <p>© 2025 – Guía práctica de Ciberseguridad IoT</p>
-  </footer>
-  <script src="script.js"></script>
+      <div id="modal-tabs" class="flex flex-wrap border-b mb-4">
+        <button data-tab="adultos" class="tab-btn active">Adultos</button>
+        <button data-tab="adolescentes" class="tab-btn">Adolescentes</button>
+        <button data-tab="ninos" class="tab-btn">Niños</button>
+        <button data-tab="mayores" class="tab-btn">Tercera Edad</button>
+      </div>
+      <div id="modal-body"></div>
+    </div>
+  </div>
+
+  <!-- JavaScript -->
+  <script src="js/modal.js"></script>
 </body>
 </html>
