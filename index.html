@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía Visual: Ciberseguridad en el Hogar</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=DynaPuff:wght@400..700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-border: rgba(255, 255, 255, 0.1);
+            --primary: #3b82f6;
+        }
+
+        body {
+            /* Mantenemos la fuente de interfaz para legibilidad, títulos DynaPuff */
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: #f8fafc;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        h1, h2, h3, .dynapuff-font {
+            font-family: 'DynaPuff', system-ui;
+        }
+
+        /* Fondo dinámico animado (Glassmorphism effect) */
+        .ambient-bg {
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 50% 50%, #17163b 0%, #0f172a 40%);
+            z-index: -1;
+            animation: drift 25s ease-in-out infinite alternate;
+        }
+        @keyframes drift {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(-3%, -3%) scale(1.05); }
+        }
+
+        /* Contenedor del castillo tipo tarjeta de cristal */
+        .castle-wrapper {
+            position: relative;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--card-border);
+            border-radius: 1.5rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            padding: 1.5rem;
+            margin: 0 auto;
+            max-width: 900px;
+        }
+
+        .castle-container {
+            position: relative;
+            width: 100%;
+            /* Borde interno suave a la imagen */
+            border-radius: 0.75rem;
+            overflow: hidden; 
+        }
+
+        .castle-container img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 0.75rem;
+        }
+
+        /* --- ZONAS INTERACTIVAS (Efecto Radar Hotspot) --- */
+        .room {
+            position: absolute;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(59, 130, 246, 0.5); /* Semitransparente azul */
+            border: 2px solid rgba(147, 197, 253, 0.9);
+            transform: translate(-50%, -50%); /* Centrado exacto en la coordenada */
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.6);
+            z-index: 10;
+        }
+
+        /* Círculos pulsantes estilo radar */
+        .room::before, .room::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 2px solid rgba(96, 165, 250, 0.6);
+            animation: pulse-ring 2.5s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+        }
+        .room::after {
+            animation-delay: 1.25s;
+        }
+
+        .room:hover {
+            background: rgba(59, 130, 246, 0.9);
+            box-shadow: 0 0 30px rgba(96, 165, 250, 0.8), inset 0 0 10px rgba(255, 255, 255, 0.5);
+            transform: translate(-50%, -50%) scale(1.15);
+            border-color: #ffffff;
+        }
+
+        @keyframes pulse-ring {
+            0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+            100% { transform: translate(-50%, -50%) scale(2.8); opacity: 0; }
+        }
+
+        /* --- MODAL (Estilo moderno superpuesto) --- */
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            padding: 1rem;
+        }
+
+        .modal.show {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal-content {
+            background: rgba(30, 41, 59, 0.95);
+            border: 1px solid var(--card-border);
+            border-radius: 1.5rem;
+            width: 100%;
+            max-width: 700px;
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            transform: scale(0.95) translateY(20px);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .modal.show .modal-content {
+            transform: scale(1) translateY(0);
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 1.25rem;
+            right: 1.5rem;
+            color: #94a3b8;
+            font-size: 2rem;
+            line-height: 1;
+            cursor: pointer;
+            transition: color 0.2s;
+            background: none;
+            border: none;
+            z-index: 10;
+        }
+        .close-btn:hover { color: white; }
+
+        .modal-header {
+            padding: 2rem 2rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            background: rgba(15, 23, 42, 0.5);
+        }
+
+        .modal-icon-container {
+            font-size: 2.5rem;
+            background: rgba(255,255,255,0.05);
+            width: 70px;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 1rem;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        /* --- TABS (Pills Style) --- */
+        .tabs-container {
+            padding: 0 2rem;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            background: rgba(15, 23, 42, 0.3);
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+        .tabs-container::-webkit-scrollbar { display: none; }
+        
+        .tabs {
+            display: flex;
+            gap: 0.75rem;
+            padding: 1.25rem 0;
+        }
+
+        .tab-btn {
+            background: rgba(255,255,255,0.05);
+            color: #cbd5e1;
+            padding: 0.5rem 1.25rem;
+            border-radius: 9999px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            border: 1px solid transparent;
+        }
+
+        .tab-btn:hover {
+            color: white;
+            background: rgba(255,255,255,0.1);
+        }
+
+        .tab-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: rgba(96, 165, 250, 0.5);
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+        }
+
+        /* --- CONTENIDO DEL MODAL --- */
+        .modal-body {
+            padding: 2rem;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .tab-content {
+            display: none;
+            animation: slideUpFade 0.4s ease forwards;
+        }
+
+        .tab-content.active { display: block; }
+        
+        @keyframes slideUpFade {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Textos base */
+        .tab-content p {
+            color: #cbd5e1;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            font-size: 1.05rem;
+        }
+
+        /* Estilos de PDF Links */
+        .tab-content a {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(59, 130, 246, 0.15);
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            color: #60a5fa;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            transition: all 0.2s ease;
+            text-decoration: none;
+            font-weight: 500;
+            margin-left: 0.5rem;
+        }
+        .tab-content a:hover {
+            background: rgba(59, 130, 246, 0.3);
+            color: white;
+            box-shadow: 0 0 15px rgba(59,130,246,0.3);
+            transform: translateY(-2px);
+        }
+
+        /* --- TIPS (Alertas estilo Toasts Modernas) --- */
+        .tip {
+            display: flex;
+            align-items: flex-start;
+            gap: 1.25rem;
+            padding: 1.25rem;
+            border-radius: 1rem;
+            margin-bottom: 1rem;
+            border: 1px solid transparent;
+            backdrop-filter: blur(10px);
+            line-height: 1.5;
+            font-size: 0.95rem;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .tip:hover { 
+            transform: translateX(4px); 
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        }
+        .tip strong { color: white; display: block; margin-bottom: 0.25rem; font-size: 1rem; }
+        
+        .tip-icon {
+            font-size: 1.5rem;
+            flex-shrink: 0;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: rgba(0,0,0,0.2);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
+        }
+
+        .tip-green {
+            background: rgba(16, 185, 129, 0.1);
+            border-color: rgba(16, 185, 129, 0.25);
+            color: #d1fae5;
+        }
+        .tip-green .tip-icon { color: #34d399; }
+        
+        .tip-yellow {
+            background: rgba(245, 158, 11, 0.1);
+            border-color: rgba(245, 158, 11, 0.25);
+            color: #fef3c7;
+        }
+        .tip-yellow .tip-icon { color: #fbbf24; }
+        
+        .tip-red {
+            background: rgba(239, 68, 68, 0.1);
+            border-color: rgba(239, 68, 68, 0.25);
+            color: #fee2e2;
+        }
+        .tip-red .tip-icon { color: #f87171; }
+
+        /* Estilos de Utilidad Gradient */
+        .text-gradient {
+            background: linear-gradient(135deg, #60a5fa 0%, #c084fc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="ambient-bg"></div>
+
+    <div class="container mx-auto px-4 py-12 text-center max-w-5xl">
+        <header class="mb-10">
+            <h1 class="text-5xl md:text-7xl font-bold text-gradient tracking-tight mb-4 drop-shadow-lg">
+                Tu Castillo Inteligente
+            </h1>
+            <p class="text-xl md:text-2xl text-slate-300 font-medium">
+                Aprende a proteger tus dispositivos conectados.<br>
+                <span class="text-blue-400">¡Haz clic en un punto de la casa para empezar!</span>
+            </p>
+        </header>
+
+        <!-- Contenedor Interactivo con Glassmorphism -->
+        <div class="castle-wrapper">
+            <div class="castle-container">
+                <img src="Imagen.png" alt="Ilustración de un castillo inteligente con zonas de seguridad">
+                
+                <!-- ZINAS INTERACTIVAS (Transformadas a puntos radar en lugar de cuadros invisibles grandes) -->
+                <!-- Calculamos centro del cuadro original (top + height/2, left/right + width/2) -->
+                
+                <!-- Zona 1: Niños (Original left: 12%, width: 10% -> Centro ~ 17%) -->
+                <div id="kids-room" class="room" style="top: 41%; left: 17%;" title="Cuarto de los Niños"></div>
+            
+                <!-- Zona 2: Cámaras (Original right: 10%, width: 10% -> Centro ~ 15% right) -->
+                <div id="security-room" class="room" style="top: 41%; right: 15%;" title="Cámaras de Seguridad"></div>
+            
+                <!-- Zona 3: Sala (Original left: 29%, width: 14% -> Centro ~ 36%) -->
+                <div id="living-room" class="room" style="top: 48.5%; left: 36%;" title="La Sala"></div>
+
+                <!-- Zona 4: Cocina (Original right: 26%, width: 14% -> Centro ~ 33% right) -->
+                <div id="kitchen-room" class="room" style="top: 48.5%; right: 33%;" title="La Cocina"></div>
+            
+                <!-- Zona 5: Wi-Fi (Original left: 46%, bottom: 31% -> top: 69%... Centro Bottom 35.5%, Left 52%) -->
+                <!-- Para hacerlo más fácil, usamos bottom y left como el original pero ajustado al centro -->
+                <div id="wifi-room" class="room" style="bottom: 35.5%; left: 52%;" title="Wi-Fi"></div>
+            </div>
+        </div>
+        
+        <footer class="mt-12 mb-8 bg-slate-800/40 backdrop-blur-md rounded-2xl py-6 px-6 inline-block border border-white/5 shadow-xl">
+            <p class="text-lg text-slate-400 max-w-2xl mx-auto leading-relaxed">
+                Una guía visual creada para proteger a toda la familia en el mundo digital. <br/>
+                <strong class="text-slate-300">Mantén tu información tan segura como los muros de un castillo.</strong>
+            </p>
+        </footer>
+    </div>
+
+    <!-- ===== MODALS (Ventanas emergentes premium) ===== -->
+
+    <!-- Modal Base (plantilla, se llenará con JS) -->
+    <div id="modal-template" class="modal" role="dialog" aria-modal="true">
+        <div class="modal-content">
+            <button class="close-btn" aria-label="Cerrar modal">&times;</button>
+            <div class="modal-header">
+                <div class="modal-icon-container">
+                    <span id="modal-icon"></span>
+                </div>
+                <h2 id="modal-title" class="text-3xl font-bold text-white dynapuff-font tracking-wide"></h2>
+            </div>
+            
+            <!-- Pestañas por Audiencia -->
+            <div class="tabs-container">
+                <div id="modal-tabs" class="tabs">
+                    <button data-tab="adultos" class="tab-btn active">Adultos</button>
+                    <button data-tab="adolescentes" class="tab-btn">Adolescentes</button>
+                    <button data-tab="ninos" class="tab-btn">Niños</button>
+                    <button data-tab="mayores" class="tab-btn">Tercera Edad</button>
+                </div>
+            </div>
+
+            <!-- Contenido de las Pestañas -->
+            <div id="modal-body" class="modal-body">
+                <!-- El contenido se inyectará aquí -->
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== JavaScript Funcional Inalterado + Transiciones ===== -->
+    <script>
+        // Datos para cada modal (Idénticos, conservando lógica e hipervínculos)
+        const modalData = {
+            'wifi-room': {
+                icon: '📶',
+                title: 'El Corazón del Hogar: Tu Wi-Fi',
+                content: {
+                    adultos: `
+                        <p>Tu red Wi-Fi es la puerta principal de tu hogar digital. Si la dejas abierta o con una cerradura barata, cualquiera puede entrar a todas las habitaciones. Asegúrala correctamente.</p>
+                        <p class="mb-4 text-sm text-slate-400">Descarga la Checklist rápida. <a href="WiFi.pdf" target="_blank">📄 Descargar PDF</a></p> 
+
+                        <div class="tip tip-green">
+                            <span class="tip-icon">🔑</span>
+                            <div><strong>Crea una contraseña robusta:</strong> Usa una larga con letras, numeros y símbolos. Evita usar información personal. (Ejemplo: MiC@stillo!2025Segur@).</div>
+                        </div>
+                        <div class="tip tip-green">
+                           <span class="tip-icon">🌐</span>
+                            <div><strong>Crea una red para invitados:</strong> Si tu router lo permite, activa una red separada para las visitas. Así, sus dispositivos no tendrán acceso a tu red principal.</div>
+                        </div>
+                        <div class="tip tip-green">
+                            <span class="tip-icon">🔄</span>
+                            <div><strong>Mantén el router actualizado:</strong> Revisa periódicamente si hay actualizaciones de firmware. Estas corrigen fallos de seguridad.</div>
+                        </div>
+                    `,
+                    adolescentes: `
+                        <p>Piensa en la clave del Wi-Fi como la contraseña de tu cuenta de streaming. ¡No querras que cualquiera éntre!</p>
+                        <p class="mb-4 text-sm text-slate-400">Descarga la Checklist rápida. <a href="WiFi.pdf" target="_blank">📄 Descargar PDF</a></p> 
+
+                        <div class="tip tip-green">
+                            <span class="tip-icon">🎮</span>
+                            <div><strong>Wi-Fi lento = Lag en el juego.</strong> Una red segura evita que vecinos se conecten y te roben ancho de banda. ¡Protege tu conexión para ganar!</div>
+                        </div>
+                        <div class="tip tip-green">
+                            <span class="tip-icon">🚫</span>
+                            <div><strong>Nunca compartas la clave</strong>, con gente que no sea de total confianza ni siquiera con tus amigos.</div>
+                        </div>
+                        <div class="tip tip-green">
+                            <span class="tip-icon">🔍</span>
+                            <div><strong>Revisa los dispositivos conectados.</strong> Pregunta a un adulto cómo ver qué dispositivos están usando tu Wi-Fi. Si ves algo raro, avísales.</div>
+                        </div>
+                    `,
+                    ninos: `
+                        <p>¡La clave del Wi-Fi es como el conjuro mágico que protege nuestra casa!</p>
+                        <p class="mb-4 text-sm text-slate-400">Descarga la Checklist rápida. <a href="WiFi.pdf" target="_blank">📄 Descargar PDF</a></p> 
+
+                        <div class="tip tip-green">
+                            <span class="tip-icon">✨</span>
+                            <div><strong>Solo los magos buenos (la familia)</strong> deben saber el conjuro. ¡No se lo cuentes a los extraños!</div>
+                        </div>
+                        <div class="tip tip-green">
+                            <span class="tip-icon">🤖</span>
+                            <div>Si un juguete nuevo te pide la clave, pídele ayuda a un adulto para asegurarte de que sea seguro.</div>
+                        </div>
+                        <div class="tip tip-green">
+                            <span class="tip-icon">🖱️</span>
+                            <div><strong>No hagas clic en todo lo que brilla:</strong> algunos hechizos pueden ser peligrosos.</div>
+                        </div>
+                        <div class="tip tip-green">
+                            <span class="tip-icon">🛡️</span>
+                            <div><strong>Comparte solo con permiso</strong> si quieres jugar o ver videos, hazlo en la red del castillo, no en redes ajenas.</div>
+                        </div>
+                        <div class="tip tip-green">
+                            <span class="tip-icon">👨‍👩‍👧‍👦</span>
+                            <div><strong>Cuida tu identidad</strong> no digas tu nombre completo ni dirección cuando uses internet.</div>
+                        </div>
+                    `,
+                    mayores: `
+                        <p>La contraseña del Wi-Fi es la llave de su casa. Es importante guardarla bien.</p>
+                        <p class="mb-4 text-sm text-slate-400">Descarga la Checklist rápida. <a href="WiFi.pdf" target="_blank">📄 Descargar PDF</a></p> 
+
+                         <div class="tip tip-green">
+                            <span class="tip-icon">📝</span>
+                            <div><strong>Anóta la contraseña</strong> en un lugar seguro del castillo (papel físico).</div>
+                        </div>
+                        <div class="tip tip-green">
+                            <span class="tip-icon">❓</span>
+                            <div><strong>Desconfíe de visitas inesperadas:</strong> Si alguien que dice ser "técnico" le pide su contraseña sin que usted lo haya llamado, no se la dé. Consulte con un familiar.</div>
+                        </div>
+                        <div class="tip tip-green">
+                            <span class="tip-icon">🔄</span>
+                            <div><strong>Pide ayuda para configurar tu Wi-Fi:</strong> no aceptes "ayuda" de desconocidos por teléfono.</div>
+                        </div>
+                        <div class="tip tip-green">
+                            <span class="tip-icon">📞</span>
+                            <div><strong>Desconfía de correos o mensajes que pidan contraseñas.</strong></div>
+                        </div>
+                        <div class="tip tip-green">
+                            <span class="tip-icon">👨‍👩‍👧‍👦</span>
+                            <div><strong>No compartas tu red ni claves por WhatsApp o llamadas.</strong></div>
+                        </div>
+                    `
+                }
+            },
+            'living-room': {
+                icon: '🛋️',
+                title: 'La Sala: TV y Altavoces Inteligentes',
+                content: {
+                    adultos: `
+                        <p>Los televisores y altavoces pueden escuchar y ver. Gestiona sus permisos.</p>
+                        <p class="mb-4 text-sm text-slate-400">Descarga la Checklist rápida. <a href="SalaEstar.pdf" target="_blank">📄 Descargar PDF</a></p> 
+
+                        <div class="tip tip-yellow">
+                            <span class="tip-icon">🎤</span>
+                            <div><strong>Revisa el micrófono:</strong> Muchos dispositivos tienen un botón físico para apagar el micrófono. Úsalo cuando no necesites el asistente de voz.</div>
+                        </div>
+                        <div class="tip tip-green">
+                           <span class="tip-icon">⚙️</span>
+                            <div><strong>Configura la privacidad:</strong> Explora los menús de configuración de tu Smart TV. Desactiva la recopilación de datos de visualización si te preocupa tu privacidad.</div>
+                        </div>
+                         <div class="tip tip-red">
+                            <span class="tip-icon">💸</span>
+                            <div><strong>Cuidado con las compras por voz:</strong> Si usas un altavoz inteligente, configura un PIN para autorizar compras y evitar gastos accidentales.</div>
+                        </div>
+                    `,
+                    adolescentes: `
+                        <p>¿Sabías que tu altavoz puede grabar conversaciones? ¡Controla quién te escucha!</p>
+                        <p class="mb-4 text-sm text-slate-400">Descarga la Checklist rápida. <a href="SalaEstar.pdf" target="_blank">📄 Descargar PDF</a></p> 
+
+                        <div class="tip tip-yellow">
+                            <span class="tip-icon">🤫</span>
+                            <div>Apaga el micro del altavoz cuando tengas amigos en casa. La privacidad es cool.</div>
+                        </div>
+                        <div class="tip tip-green">
+                           <span class="tip-icon">📺</span>
+                            <div>Cierra sesión en tus apps (Netflix, YouTube) en la TV si la compartes con mucha gente.</div>
+                        </div>
+                    `,
+                    ninos: `
+                        <p>El altavoz es como un lorito que a veces repite lo que oye. ¡Vamos a enseñarle a estar en silencio!</p>
+                        <p class="mb-4 text-sm text-slate-400">Descarga la Checklist rápida. <a href="SalaEstar.pdf" target="_blank">📄 Descargar PDF</a></p> 
+
+                        <div class="tip tip-yellow">
+                            <span class="tip-icon">🔇</span>
+                            <div>Busca el botoncito con un micrófono dibujado. ¡Púlsalo para que el "lorito" descanse y no escuche tus secretos!</div>
+                        </div>
+                    `,
+                    mayores: `
+                         <p>Estos aparatos son muy útiles, pero es bueno saber cómo funcionan.</p>
+                         <p class="mb-4 text-sm text-slate-400">Descarga la Checklist rápida. <a href="SalaEstar.pdf" target="_blank">📄 Descargar PDF</a></p> 
+
+                        <div class="tip tip-green">
+                            <span class="tip-icon">🗣️</span>
+                            <div><strong>Pida ayuda para configurar:</strong> Pida a un familiar que le ayude a revisar la configuración inicial para que el dispositivo solo haga lo que usted necesita.</div>
+                        </div>
+                         <div class="tip tip-yellow">
+                            <span class="tip-icon">🔘</span>
+                            <div><strong>Identifique el botón del micrófono:</strong> Es útil saber cuál es para apagarlo si en algún momento no se siente cómodo.</div>
+                        </div>
+                    `
+                }
+            },
+            'kitchen-room': {
+                icon: '🍳',
+                title: 'La Cocina Inteligente',
+                content: {
+                    adultos: `
+                        <p>Incluso tu refrigerador o cafetera pueden conectarse a internet. La regla principal es la simplicidad.</p>
+                        <p class="mb-4 text-sm text-slate-400">Descarga la Checklist rápida. <a href="Cocina.pdf" target="_blank">📄 Descargar PDF</a></p> 
+
+                        <div class="tip tip-green">
+                            <span class="tip-icon">🔌</span>
+                            <div><strong>Si no usas la función "smart", no la conectes:</strong> Si no necesitas que tu microondas se conecte al Wi-Fi, simplemente no lo configures en la red.</div>
+                        </div>
+                        <div class="tip tip-yellow">
+                            <span class="tip-icon">🔒</span>
+                            <div><strong>Cambia la contraseña por defecto:</strong> Si conectas un electrodoméstico, asegúrate de cambiar la contraseña que viene de fábrica.</div>
+                        </div>
+                    `,
+                    adolescentes:`
+                        <p class="mb-4 text-sm text-slate-400 text-center mt-4">Descarga la Checklist rápida. <a href="Cocina.pdf" target="_blank">📄 Descargar PDF</a></p>
+                        <p class="text-center text-slate-400 py-6 text-xl">Los electrodomésticos de la cocina no suelen ser un gran riesgo para ti, ¡pero los principios de contraseñas seguras se aplican a todo!</p>`,
+                    ninos: `
+                        <p class="mb-4 text-sm text-slate-400 text-center mt-4">Descarga la Checklist rápida. <a href="Cocina.pdf" target="_blank">📄 Descargar PDF</a></p>
+                        <p class="text-center text-slate-400 py-6 text-xl">¡Los aparatos de la cocina son para cocinar, no para jugar en internet! Déjaselos a los adultos. 😉</p>`,
+                    mayores: `
+                        <p class="mb-4 text-sm text-slate-400 text-center mt-4">Descarga la Checklist rápida. <a href="Cocina.pdf" target="_blank">📄 Descargar PDF</a></p>
+                        <p class="text-center text-slate-400 py-6 text-xl">La mayoría de las funciones "inteligentes" de estos aparatos no son necesarias. Es más seguro usarlos de la forma tradicional.</p>`,
+                }
+            },
+            'kids-room': {
+                icon: '🧸',
+                title: 'El Cuarto de los Niños: Juguetes Conectados',
+                content: {
+                     adultos: `
+                        <p>Los juguetes con conexión a internet, micrófonos o cámaras pueden ser un riesgo para la privacidad de los más pequeños.</p>
+                        <p class="mb-4 text-sm text-slate-400">Descarga la Checklist rápida. <a href="Habitacion.pdf" target="_blank">📄 Descargar PDF</a></p>
+
+                        <div class="tip tip-yellow">
+                            <span class="tip-icon">🧐</span>
+                            <div><strong>Investiga antes de comprar:</strong> Busca reseñas sobre la seguridad del juguete. ¿Otros padres han reportado problemas?</div>
+                        </div>
+                        <div class="tip tip-green">
+                           <span class="tip-icon">🔒</span>
+                            <div><strong>Usa contraseñas fuertes</strong> para la cuenta asociada al juguete.</div>
+                        </div>
+                         <div class="tip tip-red">
+                            <span class="tip-icon">🌙</span>
+                            <div><strong>Apaga los juguetes por la noche:</strong> Desconéctalos de la corriente o del Wi-Fi cuando no se estén usando, especialmente en el dormitorio.</div>
+                        </div>
+                    `,
+                    adolescentes:`
+                        <p class="mb-4 text-sm text-slate-400 text-center mt-4">Descarga la Checklist rápida. <a href="Habitacion.pdf" target="_blank">📄 Descargar PDF</a></p>
+                        <p class="text-center text-slate-400 py-6 text-xl">Si tienes hermanos pequeños, ayúdales a entender que no deben dar información personal (su nombre, colegio, etc.) a sus juguetes que hablan.</p>`,
+                    ninos: `
+                        <p>¡Tus juguetes son tus amigos! Pero algunos amigos no saben guardar secretos.</p>
+                        <p class="mb-4 text-sm text-slate-400">Descarga la Checklist rápida. <a href="Habitacion.pdf" target="_blank">📄 Descargar PDF</a></p>
+
+                        <div class="tip tip-green">
+                            <span class="tip-icon">💬</span>
+                            <div>Cuéntale tus aventuras, ¡pero no le digas tu nombre completo o dónde vives!</div>
+                        </div>
+                        <div class="tip tip-red">
+                           <span class="tip-icon">🔌</span>
+                            <div>Cuando te vayas a dormir, ¡pon a dormir a tus juguetes también! Apágalos para que descansen.</div>
+                        </div>
+                    `,
+                    mayores: `
+                        <p>Al regalar un juguete moderno a sus nietos, es bueno tener en cuenta un par de cosas.</p>
+                        <p class="mb-4 text-sm text-slate-400">Descarga la Checklist rápida. <a href="Habitacion.pdf" target="_blank">📄 Descargar PDF</a></p>
+
+                        <div class="tip tip-yellow">
+                            <span class="tip-icon">🎁</span>
+                            <div><strong>Pregunte a los padres:</strong> Antes de comprar un juguete con conexión a internet, es buena idea consultar con los padres si se sienten cómodos con él.</div>
+                        </div>
+                        <div class="tip tip-green">
+                           <span class="tip-icon">👨‍👩‍👧</span>
+                            <div><strong>La seguridad es un buen regalo:</strong> Ayude a configurar el juguete de forma segura junto a los padres y el niño. Es una buena actividad familiar.</div>
+                        </div>
+                    `,
+                }
+            },
+            'security-room': {
+                icon: '📷',
+                title: 'Vigilancia: Cámaras de Seguridad',
+                content: {
+                     adultos: `
+                        <p>Las cámaras nos dan seguridad, pero si no están bien configuradas, pueden ser una ventana para extraños.</p>
+                        <p class="mb-4 text-sm text-slate-400">Descarga la Checklist rápida. <a href="camaras.pdf" target="_blank">📄 Descargar PDF</a></p>
+
+                        <div class="tip tip-red">
+                            <span class="tip-icon">🔑</span>
+                            <div><strong>OBLIGATORIO cambiar la contraseña:</strong> Las contraseñas por defecto de las cámaras de seguridad son conocidas y fáciles de encontrar en internet. ¡Es el paso más importante!</div>
+                        </div>
+                        <div class="tip tip-green">
+                           <span class="tip-icon">🛡️</span>
+                            <div><strong>Activa la autenticación de dos factores (2FA):</strong> Si la app de la cámara lo ofrece, actívala. Añade una capa extra de seguridad.</div>
+                        </div>
+                         <div class="tip tip-yellow">
+                            <span class="tip-icon">📍</span>
+                            <div><strong>Colocación estratégica:</strong> Instala las cámaras para que vigilen el exterior o los accesos, evitando apuntar a zonas privadas como dormitorios o baños.</div>
+                        </div>
+                    `,
+                    adolescentes:`
+                        <p class="mb-4 text-sm text-slate-400 text-center mt-4">Descarga la Checklist rápida. <a href="camaras.pdf" target="_blank">📄 Descargar PDF</a></p>
+                        <p class="text-center text-slate-400 py-6 text-xl">La seguridad de las cámaras es cosa de adultos, pero si ves algo raro en la red o un dispositivo se comporta de forma extraña, avísales.</p>`,
+                    ninos: `
+                        <p class="mb-4 text-sm text-slate-400 text-center mt-4">Descarga la Checklist rápida. <a href="camaras.pdf" target="_blank">📄 Descargar PDF</a></p>
+                        <p class="text-center text-slate-400 py-6 text-xl">Las cámaras son para ver quién llama a la puerta, ¡como la mirilla mágica de la casa! Son los guardianes.</p>`,
+                    mayores: `
+                        <p>Las cámaras pueden darle mucha tranquilidad, pero deben ser su aliado, no un riesgo.</p>
+                        <p class="mb-4 text-sm text-slate-400">Descarga la Checklist rápida. <a href="camaras.pdf" target="_blank">📄 Descargar PDF</a></p>    
+                        
+                        <div class="tip tip-red">
+                            <span class="tip-icon">👨‍🔧</span>
+                            <div><strong>Pida ayuda para la instalación:</strong> Es crucial que una persona de confianza le ayude a instalar la cámara y, sobre todo, a cambiar la contraseña inicial por una segura.</div>
+                        </div>
+                        <div class="tip tip-yellow">
+                           <span class="tip-icon">💡</span>
+                            <div><strong>Cubra las cámaras interiores:</strong> Si tiene una cámara dentro de casa (por ejemplo, para ver a una mascota), considere cubrirla con un paño cuando esté en casa y no la necesite.</div>
+                        </div>
+                    `,
+                }
+            },
+        };
+
+        // --- Selectores del DOM ---
+        const modal = document.getElementById('modal-template');
+        const modalIcon = document.getElementById('modal-icon');
+        const modalTitle = document.getElementById('modal-title');
+        const modalBody = document.getElementById('modal-body');
+        const modalTabsContainer = document.getElementById('modal-tabs');
+        const closeBtn = document.querySelector('.close-btn');
+
+        // --- Asignar Eventos ---
+        document.querySelectorAll('.room').forEach(room => {
+            room.addEventListener('click', () => {
+                const roomData = modalData[room.id];
+                if (roomData) {
+                    openModal(roomData);
+                }
+            });
+        });
+
+        modalTabsContainer.addEventListener('click', (e) => {
+            if (e.target.classList.contains('tab-btn')) {
+                const tabName = e.target.getAttribute('data-tab');
+                activateTab(tabName);
+            }
+        });
+
+        // Evento para cerrar la ventana (Transición suave)
+        function closeModal() {
+            modal.classList.remove('show');
+            setTimeout(() => {
+                modal.style.display = 'none';
+            }, 300); // Wait for transition CSS to finish
+            document.body.style.overflow = '';
+        }
+
+        closeBtn.onclick = closeModal;
+
+        // Clic fuera del modal para cerrar
+        window.onclick = (event) => {
+            if (event.target == modal) {
+                closeModal();
+            }
+        };
+
+        // Tecla escape para cerrar
+        window.onkeydown = (event) => {
+            if(event.key === 'Escape' && modal.classList.contains('show')) {
+                closeModal();
+            }
+        };
+
+        // --- Funciones ---
+        function openModal(data) {
+            modalIcon.textContent = data.icon;
+            modalTitle.textContent = data.title;
+            
+            modalBody.innerHTML = ''; // Limpiar
+            
+            for (const tab in data.content) {
+                const contentDiv = document.createElement('div');
+                contentDiv.id = `content-${tab}`;
+                contentDiv.className = 'tab-content';
+                contentDiv.innerHTML = data.content[tab];
+                modalBody.appendChild(contentDiv);
+            }
+            
+            modal.style.display = 'flex';
+            // Allow display swap before adding opacity class
+            setTimeout(() => {
+                modal.classList.add('show');
+            }, 10);
+            
+            document.body.style.overflow = 'hidden'; // Evitar scroll
+            activateTab('adultos');
+        }
+
+        function activateTab(tabName) {
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.getAttribute('data-tab') === tabName) {
+                    btn.classList.add('active');
+                }
+            });
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+                if (content.id === `content-${tabName}`) {
+                    content.classList.add('active');
+                }
+            });
+        }
+    </script>
+</body>
+</html>
